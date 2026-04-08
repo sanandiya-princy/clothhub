@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clothes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 5px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 6px 12px;
+            background: darkgray;
+            border: none;
+            cursor: pointer;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        img {
+            width: 300px;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        h3 {
+            text-align: end;
+            position: relative;
+            top: -15px;
+        }
+
+        h2 {
+            padding: 0px 40px;
+        }
+
+        h5 {
+            text-align: end;
+            padding: 0px 40px;
+            font-size: 20px;
+            position: relative;
+            top: -54px;
+        }
+
+        .flex {     
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h4 {
+            padding: 0px 10px;
+        }
+    </style>
+</head>
+
+<script>
+    let count = 0;
+
+    function addToCart() {
+        count++;
+        document.getElementById("cart-count").innerText = count;
+    }
+</script>
+
+<body>
+
+<h1>Clothes Store</h1>
+
+<form action="<%= clothToEdit ? `/updateData/${clothToEdit._id}` : '/createData' %>" method="POST">
+    <input type="text" name="title" placeholder="Title"  value="<%= clothToEdit ? clothToEdit.title : '' %>" required>
+    <input type="text" name="brand" placeholder="Brand"  value="<%= clothToEdit ? clothToEdit.brand : '' %>" required>
+    <input type="text" name="image" placeholder="Image URL"  value="<%= clothToEdit ? clothToEdit.image : '' %>" required>
+    <input type="number" name="price" placeholder="Price"  value="<%= clothToEdit ? clothToEdit.price : '' %>" required>
+    <button type="submit"><%= clothToEdit ? "Update" : "Add" %></button>
+</form>
+
+
+<h5>
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span id="cart-count">0</span>
+</h5>
+
+<div class="container">
+    <% clothes.forEach(item => { %>
+        <div class="card">
+            <h3>
+                <form action="/deleteData/<%= item._id %>" method="POST" style="display:inline;">
+                    <button style="background:red; color:white; border:none; cursor:pointer;">X</button>
+                </form>
+            </h3>
+            <img src="<%= item.image %>" 
+                 onerror="this.src='https://via.placeholder.com/150'">
+
+            <h2><%= item.title %></h2>
+            <p>Brand: <%= item.brand %></p>
+            <p>₹<%= item.price %></p>
+
+           <div class="flex">
+                <h4><button onclick="addToCart()">Buy</button></h4>
+                <h4>
+  <a href="/?editId=<%= item._id %>">
+    <button type="button">Update Data</button>
+  </a>
+</h4>
+           </div>
+        </div>
+    <% }) %>
+</div>
+
+</body>
+</html>
+
